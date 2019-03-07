@@ -19,10 +19,11 @@ LOGNAME=`date +%Y-%m-%d:%H:%M:%S`
 
 ODIR='\/usr\/local\/Wowza.*\/content\/valt_recordings\/video\/.*\/*.tmp'
 
+USER="${ADMIN_USER}"
 DBUSER="${DB_USERNAME}" # DB_USERNAME
 DBPASS="${DB_PASSWORD}" # DB_PASSWORD
 DATABASE="v3"
-#MyHOST=""      # DB_HOSTNAME
+DBSERVER="${DB_SERVER}" # DB_HOSTNAME
 
 #Environment Variables --------------------------------
 SLACK_ADDR=${SLACK_POST_ADDRESS}
@@ -44,7 +45,11 @@ fi
 WOWZAOPEN=`lsof -nP | grep $ODIR`
 
 # Check to see if there are any current recordings running
-SQLQUERY=`mysql -u$DBUSER -p$DBPASS -D $DATABASE -e "SELECT * FROM recordings"`
+if [[ $HOSTNAME == $DBSERVER ]]; then
+	SQLQUERY=`mysql -u$DBUSER -p$DBPASS -D $DATABASE -e "SELECT * FROM recordings"`
+else 
+	SQLQUERY=`ssh $USER@$DBSERVER "mysql -u$DBUSER -p$DBPASS -D $DATABASE -e 'SELECT * FROM recordings'"`
+fi
 
 touch $LOGDIR/$LOGNAME.txt
 echo "************************************************" >> $LOGDIR/$LOGNAME.txt
