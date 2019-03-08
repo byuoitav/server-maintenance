@@ -48,7 +48,7 @@ WOWZAOPEN=`lsof -nP | grep $ODIR`
 if [[ $HOSTNAME == $DBSERVER ]]; then
 	SQLQUERY=`mysql -u$DBUSER -p$DBPASS -D $DATABASE -e "SELECT * FROM recordings"`
 else 
-	SQLQUERY=`ssh $USER@$DBSERVER "mysql -u$DBUSER -p$DBPASS -D $DATABASE -e 'SELECT * FROM recordings'"`
+	SQLQUERY=`ssh $USER@$DBSERVER.byu.edu "mysql -u$DBUSER -p$DBPASS -D $DATABASE -e 'SELECT * FROM recordings'"`
 fi
 
 touch $LOGDIR/$LOGNAME.txt
