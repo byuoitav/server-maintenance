@@ -9,6 +9,8 @@
 # Script will restart Wowza if the system check over port 1935 fails to return the proper response
 # Script will then report back in local logs as well as over slack to a Slack app/channel
 #
+# TODO:
+# Additional notifications
 
 export PATH=$PATH:/bin:/usr/bin:/usr/local/bin 
 source /etc/environment
