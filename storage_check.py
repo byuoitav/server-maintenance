@@ -41,7 +41,7 @@ def search_string(file_path, word):
 
 if __name__ == "__main__":
     mount_check = '/proc/mounts'
-    points = ['/dev','/dev/sda1','/dev/mapper']
+    points = ['/dev','/dev/sda1','/dev/loop1']
     ro = ' ro,'
     rw = ' rw,'
     missmount = []
@@ -51,7 +51,9 @@ if __name__ == "__main__":
     print("Starting storage check....")
     # Loop through and check if multiple mount points are in read only mode
     for point in points:
-        ret = search_string(mount_check, point)
+        sp = (point + " ")
+        print(sp)
+        ret = search_string(mount_check, sp)
         if len(ret) == 0:
             # Add the mountpoint to a list of missing mounts (in order to create an alert)
             missmount.append(point)
