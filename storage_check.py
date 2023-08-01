@@ -41,7 +41,8 @@ def search_string(file_path, word):
 
 if __name__ == "__main__":
     mount_check = '/proc/mounts'
-    points = ['/dev','/dev/sda1','/dev/mapper']
+    # Needs to be exact as the search strings will be wrapped in regular expressions looking for spaces before and after.
+    points = [' /dev ','/dev/sda1','/dev/mapper']
     ro = ' ro,'
     rw = ' rw,'
     missmount = []
@@ -51,6 +52,7 @@ if __name__ == "__main__":
     print("Starting storage check....")
     # Loop through and check if multiple mount points are in read only mode
     for point in points:
+        # Regular expressions to look for exact string with spaces at front and back
         ret = search_string(mount_check, point)
         if len(ret) == 0:
             # Add the mountpoint to a list of missing mounts (in order to create an alert)
