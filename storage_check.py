@@ -41,7 +41,7 @@ def search_string(file_path, word):
 
 if __name__ == "__main__":
     mount_check = '/proc/mounts'
-    points = ['/dev','/dev/sda1','/dev/loop1']
+    points = ['/dev/mapper/os-Wowzacontent','/dev/sda1']
     ro = ' ro,'
     rw = ' rw,'
     missmount = []
@@ -61,6 +61,8 @@ if __name__ == "__main__":
             for r in ret:
                 z = re.search(ro, r)
                 if z:
+                    # TODO: Add additional checking logic here to test whether the mount
+                    # is really in read only mode
                     readonly.append(point)
 
     # Check if we discovered a missing mountpoint or a mount in read only mode
