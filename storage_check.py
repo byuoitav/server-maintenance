@@ -24,7 +24,7 @@ def post_teams_message(message: str) -> None:
         if response.status != 200:
             raise TeamsWebhookException(response.reason)
 
-# TODO - do we need to send this information to the event bus - would it be useful
+## TODO - do we need to send this information to the event bus - would it be useful
 """
 def post_event_bus(message: str) -> None:
     request = req.Request(url=WEBHOOK_URL, method="POST")
@@ -46,6 +46,7 @@ def search_string(file_path, word):
         return output
 
 if __name__ == "__main__":
+
     # Pull the list of files to check
     #mount_check = '/proc/mounts'
     mount_check = cfg["mount_check"]["files"]
@@ -62,6 +63,7 @@ if __name__ == "__main__":
     hname = socket.gethostname()
     print("Starting storage check....")
     # Loop through and check if multiple mount points are in read only mode
+
     for mc in mount_check:
         for point in points:
             sp = (point + " ")
