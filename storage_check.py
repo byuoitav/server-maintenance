@@ -12,7 +12,7 @@ class TeamsWebhookException(Exception):
 # Open the configuration file and dump information into variable
 config = 'config.yaml'
 with open(config, "r") as configfile:
-    cfg = yaml.load(configfile)
+    cfg = yaml.safe_load(configfile)
 
 TEAMS_WEBHOOK_URL = cfg["comms"]['teams_webhook']
 
