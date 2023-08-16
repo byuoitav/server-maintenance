@@ -1,4 +1,5 @@
 import re
+import yaml
 import socket
 import json
 import sys
@@ -8,7 +9,12 @@ from urllib import request as req
 class TeamsWebhookException(Exception):
     pass
 
-TEAMS_WEBHOOK_URL = os.environ['TEAMS_WEBHOOK']
+# Open the configuration file and dump information into variable
+config = 'config.yml'
+with open(config, "r") as configfile:
+    cfg = yaml.load(configfile)
+
+TEAMS_WEBHOOK_URL = cfg["comms"]['teams_webhook']
 
 def post_teams_message(message: str) -> None:
     request = req.Request(url=TEAMS_WEBHOOK_URL, method="POST")
@@ -40,8 +46,14 @@ def search_string(file_path, word):
         return output
 
 if __name__ == "__main__":
-    mount_check = '/proc/mounts'
-    points = ['/dev','/dev/sda1','/dev/loop1']
+    # Pull the list of files to check
+    #mount_check = '/proc/mounts'
+    mount_check = cfg["mount_check"]["files"]
+
+    # Pull the list of mount points to check
+    #points = ['/dev','/dev/sda1','/dev/loop1']
+    points = cfg["mount_points"]
+
     ro = ' ro,'
     rw = ' rw,'
     missmount = []
@@ -50,18 +62,19 @@ if __name__ == "__main__":
     hname = socket.gethostname()
     print("Starting storage check....")
     # Loop through and check if multiple mount points are in read only mode
-    for point in points:
-        sp = (point + " ")
-        print(sp)
-        ret = search_string(mount_check, sp)
-        if len(ret) == 0:
-            # Add the mountpoint to a list of missing mounts (in order to create an alert)
-            missmount.append(point)
-        else:
-            for r in ret:
-                z = re.search(ro, r)
-                if z:
-                    readonly.append(point)
+    for mc in mount_check:
+        for point in points:
+            sp = (point + " ")
+            print(sp)
+            ret = search_string(mc, sp)
+            if len(ret) == 0:
+                # Add the mountpoint to a list of missing mounts (in order to create an alert)
+                missmount.append(point)
+            else:
+                for r in ret:
+                    z = re.search(ro, r)
+                    if z:
+                        readonly.append(point)
 
     # Check if we discovered a missing mountpoint or a mount in read only mode
     # if we discover an issue, raise the flag
